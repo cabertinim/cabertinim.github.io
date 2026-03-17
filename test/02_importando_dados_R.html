@@ -1,0 +1,1583 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.39">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>2&nbsp; Importando dados no R – Bioestatística Usando o R</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./03_manipulando_dados_R.html" rel="next">
+<link href="./01_primeiros_passos.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-d166b450ba5a8e9f7a0ab969bf6592c1.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-02a7accf7feaac6c45308d5f6bf48a3f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-84a8bdc8c1282866496142518a0cceea.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script><link rel="stylesheet" href="styles.css">
+</head>
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./02_importando_dados_R.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Importando dados no R</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Bioestatística Usando o R</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01_primeiros_passos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Primeiros Passos</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02_importando_dados_R.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Importando dados no R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03_manipulando_dados_R.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Manipulando dados com o pacote Tidyverse</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04_resumindo_vars_categoricas_R.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Resumindo Variáveis Categóricas</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05_resumindo_vars_num.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Resumindo Variáveis Numéricas</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08_TH_qui_quadrado_atualizada.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Teste de Hipóteses no R - Parte I</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09_TH_correlacao.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Teste de Hipóteses no R - Correlação</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10_TH_2_grupos_indep.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Teste de Hipóteses no R - Comparação de 2 grupos independentes</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11_TH_2_grupos_pareados.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Teste de Hipóteses no R - Comparação de 2 grupos pareados</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ANOVA.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">ANOVA</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Aula_RL.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Regressão Linear</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Regressao_logistica_final.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Regressão logística no R</span></span></a>
+  </div>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Contents</h2>
+   
+  <ul>
+<li><a href="#problema-surto-de-intoxica%C3%A7%C3%A3o-alimentar-estafiloc%C3%B3cica-durante-evento-cient%C3%ADfico" id="toc-problema-surto-de-intoxicação-alimentar-estafilocócica-durante-evento-científico" class="nav-link active" data-scroll-target="#problema-surto-de-intoxica%C3%A7%C3%A3o-alimentar-estafiloc%C3%B3cica-durante-evento-cient%C3%ADfico"><span class="header-section-number">2.1</span> Problema: Surto de intoxicação alimentar estafilocócica durante evento científico</a></li>
+  <li><a href="#importando-.xlsx" id="toc-importando-.xlsx" class="nav-link" data-scroll-target="#importando-.xlsx"><span class="header-section-number">2.2</span> Importando .xlsx</a></li>
+  <li>
+<a href="#importando-.csv" id="toc-importando-.csv" class="nav-link" data-scroll-target="#importando-.csv"><span class="header-section-number">2.3</span> Importando .csv</a>
+  <ul class="collapse">
+<li><a href="#fun%C3%A7%C3%B5es" id="toc-funções" class="nav-link" data-scroll-target="#fun%C3%A7%C3%B5es"><span class="header-section-number">2.3.1</span> Funções</a></li>
+  </ul>
+</li>
+  </ul></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><div class="custom-book-header">
+  <div class="custom-book-header-left">Bioestatística Usando o R</div>
+  <div class="custom-book-header-right"></div>
+</div>
+
+<header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">
+<span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Importando dados no R</span>
+</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header><p>O R permite a leitura de dados em diferentes formatos. Podemos digitá-los diretamente no R ou importá-los de vários tipos de arquivos/extensões. O formato mais adequado para seu banco de dados irá depender do seu tamanho.</p>
+<p>Podemos ler aquivos em formato .txt, .xls, .csv, .dbs, de outros <em>softwares</em> estatísticos (SPSS, SAS, etc), entre outros.</p>
+<p>Pacotes como <code>readr</code>, <code>readxl</code>, entre outros, serão úteis na leitura dos dados.</p>
+<p>Entretanto, vale ressaltar que, para que possamos importar os dados no R para posterior análise, precisamos ter anteriormente definido o problema e os objetivos, coletado os dados (variáveis de interesse) e construído um banco de dados.</p>
+<p>A seguir, introduziremos um problema fictício sobre intoxicação alimentar, que será utilizado no decorrer deste material.</p>
+<section id="problema-surto-de-intoxicação-alimentar-estafilocócica-durante-evento-científico" class="level2" data-number="2.1"><h2 data-number="2.1" class="anchored" data-anchor-id="problema-surto-de-intoxicação-alimentar-estafilocócica-durante-evento-científico">
+<span class="header-section-number">2.1</span> Problema: Surto de intoxicação alimentar estafilocócica durante evento científico</h2>
+<p>Em novembro de 2018, um surto de intoxicação alimentar por enterotoxina estafilocócica ocorreu após pessoas almoçarem em um simpósio, promovido por uma universidade privada, no município de Verde Oliva.</p>
+<p>A alimentação servida foi preparada na cozinha de uma empresa terceirizada e enviada ao local do evento por meio de vans sem refrigeração. O cardápio foi composto por: salada de folhas verdes, tomate, cenoura e pepino, pão francês, medalhão ao molho madeira, macarrão espaguete sem molho, molho de queijo, molho ao sugo, pudim de leite condensado, salada de frutas, suco de laranja e água.</p>
+<p>O almoço ocorreu por volta das 13:00h. Os primeiros casos do surto começaram a apresentar sintomas típicos de intoxicação alimentar, como náusea, vômito, cólica abdominal e diarreia, uma hora após a ingestão dos alimentos.</p>
+<p>No total, 200 pessoas participaram do simpósio. Das 150 pessoas que almoçaram no local do evento, 50 adoeceram. Foram considerados casos do surto as pessoas que apresentaram vômito e/ou diarreia após terem se alimentado com pelo menos um dos itens servidos no evento.</p>
+<p>Com a investigação do surto alimentar pretende-se identificar quais alimentos possivelmente provocaram a intoxicação no evento científico.</p>
+<p>Foram coletadas as seguintes variáveis:</p>
+<ul>
+<li>id: número de identificação;<br>
+</li>
+<li>caso: não caso(0) e caso(1);<br>
+</li>
+<li>sexo: feminino(0) e masculino(1);<br>
+</li>
+<li>dtnasc: data de nascimento (dd/mm/aaaa);<br>
+</li>
+<li>ocupa: ocupação referida no momento da inscrição;<br>
+</li>
+<li>dtisint: data de início dos sintomas (dd/mm/aaaa);<br>
+</li>
+<li>horaisint: os sintomas tiveram início após quantas horas depois de comer? (em horas);</li>
+<li>diarreia: teve diarreia? não(0); sim(1);<br>
+</li>
+<li>colica: teve cólica intestinal? não(0); sim(1);<br>
+</li>
+<li>vomito: teve vômito? não(0); sim(1);<br>
+</li>
+<li>nausea: teve náusea? não(0); sim(1);<br>
+</li>
+<li>cefaleia: teve dor de cabeça/cefaléia? não(0); sim(1);<br>
+</li>
+<li>desidratacao: teve desidratação? não(0); sim(1);<br>
+</li>
+<li>febre: teve febre (temp&gt;37,5C°)? não(0); sim(1);<br>
+</li>
+<li>servsaude: procurou algum serviço de saúde? não(0); sim(1);<br>
+</li>
+<li>gravidade: gravidade do caso - leve(1), moderado(2) ou grave(3)<br>
+</li>
+<li>salada: comeu salada de folhas verdes, tomate, cenoura e pepino? não(0); sim(1);<br>
+</li>
+<li>pao: comeu mini-pão francês? não(0); sim(1);<br>
+</li>
+<li>medalhao: comeu medalhão ao molho madeira? não(0); sim(1);<br>
+</li>
+<li>macarrao: comeu macarrão cozido? não(0); sim(1);<br>
+</li>
+<li>molhoqueijo: comeu molho de queijo? não(0); sim(1);<br>
+</li>
+<li>molhoverm: comeu molho ao sugo? não(0); sim(1);<br>
+</li>
+<li>pudim: comeu pudim de leite condensado? não(0); sim(1);</li>
+<li>frutas: comeu salada de frutas? não(0); sim(1);<br>
+</li>
+<li>agua: bebeu água? não(0); sim(1);<br>
+</li>
+<li>suco: bebeu suco de laranja? não(0); sim(1);<br>
+</li>
+<li>hb: valor de hemoglobina (valor de referência 12 – 16 g/dL);<br>
+</li>
+<li>leuco: valor de leucócitos (valor de referência 4.500 – 11.000 /uL);<br>
+</li>
+<li>tgl: valor de triglicérides (valor de referência &lt;175 mg/dL sem jejum)</li>
+</ul>
+<p>Alguns dados sobre os comensais estão disponíveis no banco de dados <a href="https://docs.google.com/spreadsheets/d/1Xelz4_hMWR6wwfYBsMtIgvcbU5qk0_VJ/edit?usp=sharing&amp;ouid=107277038879352988537&amp;rtpof=true&amp;sd=true">surto</a>.</p>
+<p>Faça o <em>download</em> do arquivo <a href="https://docs.google.com/spreadsheets/d/1Xelz4_hMWR6wwfYBsMtIgvcbU5qk0_VJ/edit?usp=sharing&amp;ouid=107277038879352988537&amp;rtpof=true&amp;sd=true">surto</a> e salve na pasta criada do seu projeto R.</p>
+</section><section id="importando-.xlsx" class="level2" data-number="2.2"><h2 data-number="2.2" class="anchored" data-anchor-id="importando-.xlsx">
+<span class="header-section-number">2.2</span> Importando .xlsx</h2>
+<p>O pacote <code>readxl</code> é utilizado para ler arquivos excel em R. Assim podemos utilizar a função <code>read_excel</code> para ler tais arquivos. (Ver: <a href="https://cran.r-project.org/web/packages/readxl/readxl.pdf" class="uri">https://cran.r-project.org/web/packages/readxl/readxl.pdf</a> e <a href="https://www.rdocumentation.org/packages/readxl/versions/0.1.1/topics/read_excel)" class="uri">https://www.rdocumentation.org/packages/readxl/versions/0.1.1/topics/read_excel)</a></p>
+<p>A seguir utilizaremos o arquivo <a href="https://docs.google.com/spreadsheets/d/1Xelz4_hMWR6wwfYBsMtIgvcbU5qk0_VJ/edit?usp=sharing&amp;ouid=107277038879352988537&amp;rtpof=true&amp;sd=true">surto</a>, que contém dados sobre um surto de intoxicação alimentar estafilocócica durante evento científico (dados fictícios).</p>
+
+<div id="id" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="https://uploaddeimagens.com.br/images/002/966/052/original/dados_excel.png?1605622385" class="class figure-img" style="width:80.0%;height:80.0%"></p>
+<figcaption>Exemplo do arquivo de dados no formato do Excel, <a href="https://docs.google.com/spreadsheets/d/1Xelz4_hMWR6wwfYBsMtIgvcbU5qk0_VJ/edit?usp=sharing&amp;ouid=107277038879352988537&amp;rtpof=true&amp;sd=true">surto</a></figcaption></figure>
+</div>
+
+<p>Primeiro instale o pacote <code>readxl</code> usando o comando <code>install.packages("readxl")</code>.</p>
+<div class="cell">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#Carregue o pacote usando a função library(nome_pacote)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://readxl.tidyverse.org">readxl</a></span><span class="op">)</span> </span>
+<span><span class="co">#Utilize a função read_excel para ler o banco de dados surto</span></span>
+<span><span class="va">surto</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html">read_excel</a></span><span class="op">(</span><span class="st">"./data/surto.xlsx"</span><span class="op">)</span> </span>
+<span><span class="co">#Para visualizar o banco de dados utilize a função View(nome_dados)</span></span>
+<span><span class="co">#View(surto) </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Após a importação do arquivo de dados, precisamos verificar se as variáveis foram importadas corretamente, ou seja, quais os tipos/formatos. Para isso, podemos utilizar a função <em>str</em>.</p>
+<div class="cell">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">surto</span><span class="op">)</span> <span class="co">#A função str(arq1) é utilizada para mostrar uma descrição do arquivo lido.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>tibble [150 × 29] (S3: tbl_df/tbl/data.frame)
+ $ id          : num [1:150] 1 2 3 4 5 6 7 8 9 10 ...
+ $ caso        : num [1:150] 1 1 1 1 1 1 1 1 1 1 ...
+ $ sexo        : num [1:150] 1 0 1 1 1 0 0 1 1 0 ...
+ $ dtnasc      : POSIXct[1:150], format: "1955-01-15" "1977-03-23" ...
+ $ ocupa       : chr [1:150] "professor" "enfermeiro" "professor" "professor" ...
+ $ dtisint     : POSIXct[1:150], format: "2018-11-20" "2018-11-21" ...
+ $ horaisint   : num [1:150] 1 12 2 4 8 2 3 4 4 3 ...
+ $ diarreia    : num [1:150] 0 1 1 1 1 1 1 1 1 1 ...
+ $ colica      : num [1:150] 1 1 1 1 1 1 1 1 1 1 ...
+ $ vomito      : num [1:150] 1 0 1 0 0 1 1 0 0 1 ...
+ $ nausea      : num [1:150] 1 1 1 1 0 1 0 0 0 0 ...
+ $ cefaleia    : num [1:150] 1 0 1 0 0 1 1 0 1 1 ...
+ $ desidratacao: num [1:150] 0 0 0 0 0 0 1 0 0 0 ...
+ $ febre       : num [1:150] 0 0 NA 0 0 1 1 0 0 1 ...
+ $ servsaude   : num [1:150] 0 0 0 0 0 0 1 0 0 0 ...
+ $ gravidade   : num [1:150] 1 1 2 1 1 2 3 1 1 2 ...
+ $ salada      : num [1:150] 0 0 1 1 0 1 0 1 0 1 ...
+ $ pao         : num [1:150] 0 1 0 1 0 0 0 1 1 1 ...
+ $ medalhao    : num [1:150] 1 1 0 0 0 1 1 1 1 0 ...
+ $ macarrao    : num [1:150] 1 0 0 1 1 0 1 1 1 1 ...
+ $ molhoqueijo : num [1:150] 1 0 1 1 1 0 1 1 1 1 ...
+ $ molhoverm   : num [1:150] 1 1 0 0 1 0 0 1 1 1 ...
+ $ pudim       : num [1:150] 1 1 0 0 1 0 1 0 1 0 ...
+ $ frutas      : num [1:150] 0 1 1 0 1 1 0 1 0 1 ...
+ $ agua        : num [1:150] 1 1 0 0 1 1 0 1 0 1 ...
+ $ suco        : num [1:150] 1 1 1 1 1 1 1 1 1 1 ...
+ $ hb          : num [1:150] 11.6 18.8 10 13 14.6 ...
+ $ leuco       : num [1:150] 11535 13971 13908 10491 13116 ...
+ $ tgl         : num [1:150] 194 188 97 91 101 100 102 105 89 99 ...</code></pre>
+</div>
+</div>
+<p>Observe que todas as variáveis estão no formato numérico (num), exceto as variáveis dtnasc (formato data, POSIXct), ocupa (formato texto, chr) e dtisint (formato data). Entretanto, o formato numérico não é adequado para algumas variáveis.</p>
+<p>As variáveis qualitativas ou categóricas são tratadas como fatores (factor) no R e as variáveis quantitativas ou numéricas são do formato numérico (num).</p>
+<p>A seguir, vamos classificar as variáveis de interesse do banco de dados de intoxicação alimentar (<a href="https://docs.google.com/spreadsheets/d/1Xelz4_hMWR6wwfYBsMtIgvcbU5qk0_VJ/edit?usp=sharing&amp;ouid=107277038879352988537&amp;rtpof=true&amp;sd=true">surto</a>).</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead><tr class="header">
+<th style="text-align: left;">Variável</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Formato</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">id</td>
+<td style="text-align: left;">Numérica Ordinal</td>
+<td style="text-align: left;">num</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">caso</td>
+<td style="text-align: left;">Categórica Nominal</td>
+<td style="text-align: left;">factor</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">sexo</td>
+<td style="text-align: left;">Categórica Nominal</td>
+<td style="text-align: left;">factor</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">dtnasc</td>
+<td style="text-align: left;">Data</td>
+<td style="text-align: left;">date</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ocupa</td>
+<td style="text-align: left;">Categórica Nominal</td>
+<td style="text-align: left;">factor</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">dtisint</td>
+<td style="text-align: left;">Data</td>
+<td style="text-align: left;">date</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">horaisint</td>
+<td style="text-align: left;">Numérica</td>
+<td style="text-align: left;">num</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">diarreia</td>
+<td style="text-align: left;">Categórica Nominal</td>
+<td style="text-align: left;">factor</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">colica</td>
+<td style="text-align: left;">Categórica Nominal</td>
+<td style="text-align: left;">factor</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">vomito</td>
+<td style="text-align: left;">Categórica Nominal</td>
+<td style="text-align: left;">factor</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">nausea</td>
+<td style="text-align: left;">Categórica Nominal</td>
+<td style="text-align: left;">factor</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">cefaleia</td>
+<td style="text-align: left;">Categórica Nominal</td>
+<td style="text-align: left;">factor</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">desidratacao</td>
+<td style="text-align: left;">Categórica Nominal</td>
+<td style="text-align: left;">factor</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">febre</td>
+<td style="text-align: left;">Categórica Nominal</td>
+<td style="text-align: left;">factor</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">servsaude</td>
+<td style="text-align: left;">Categórica Nominal</td>
+<td style="text-align: left;">factor</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">gravidade</td>
+<td style="text-align: left;">Categórica Ordinal</td>
+<td style="text-align: left;">factor</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">salada</td>
+<td style="text-align: left;">Categórica Nominal</td>
+<td style="text-align: left;">factor</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pao</td>
+<td style="text-align: left;">Categórica Nominal</td>
+<td style="text-align: left;">factor</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">medalhao</td>
+<td style="text-align: left;">Categórica Nominal</td>
+<td style="text-align: left;">factor</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">macarrao</td>
+<td style="text-align: left;">Categórica Nominal</td>
+<td style="text-align: left;">factor</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">molhoqueijo</td>
+<td style="text-align: left;">Categórica Nominal</td>
+<td style="text-align: left;">factor</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">molhoverm</td>
+<td style="text-align: left;">Categórica Nominal</td>
+<td style="text-align: left;">factor</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pudim</td>
+<td style="text-align: left;">Categórica Nominal</td>
+<td style="text-align: left;">factor</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">frutas</td>
+<td style="text-align: left;">Categórica Nominal</td>
+<td style="text-align: left;">factor</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">agua</td>
+<td style="text-align: left;">Categórica Nominal</td>
+<td style="text-align: left;">factor</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">suco</td>
+<td style="text-align: left;">Categórica Nominal</td>
+<td style="text-align: left;">factor</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">hb</td>
+<td style="text-align: left;">Numérica Contínua</td>
+<td style="text-align: left;">num</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">leuco</td>
+<td style="text-align: left;">Numérica Contínua</td>
+<td style="text-align: left;">num</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">tgl</td>
+<td style="text-align: left;">Numérica Contínua</td>
+<td style="text-align: left;">num</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Agora que já sabemos o tipo das variáveis de interesse, precisamos transformar as variáveis qualitativas/categóricas em “factor”. Para isso, usaremos a função <code>factor</code>; o argumento <em>label</em> da função, permite nomear as categorias das variáveis.</p>
+<div class="cell">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#transformando em factor</span></span>
+<span><span class="va">surto</span><span class="op">$</span><span class="va">caso</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">surto</span><span class="op">$</span><span class="va">caso</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span><span class="op">(</span><span class="va">surto</span><span class="op">$</span><span class="va">caso</span><span class="op">)</span> <span class="co">#níveis do fator</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "0" "1"</code></pre>
+</div>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#classificando os níveis do fator</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span><span class="op">(</span><span class="va">surto</span><span class="op">$</span><span class="va">caso</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"Não"</span><span class="op">=</span><span class="st">"0"</span>,</span>
+<span>                           <span class="st">"Sim"</span><span class="op">=</span><span class="st">"1"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span><span class="op">(</span><span class="va">surto</span><span class="op">$</span><span class="va">caso</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "Não" "Sim"</code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#transformando as demais variáveis em fatores</span></span>
+<span><span class="va">surto</span><span class="op">$</span><span class="va">sexo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">surto</span><span class="op">$</span><span class="va">sexo</span>, labels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Feminino"</span>,<span class="st">"Masculino"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">surto</span><span class="op">$</span><span class="va">ocupa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">surto</span><span class="op">$</span><span class="va">ocupa</span><span class="op">)</span></span>
+<span><span class="va">surto</span><span class="op">$</span><span class="va">diarreia</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">surto</span><span class="op">$</span><span class="va">diarreia</span>, labels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Não'</span>,<span class="st">'Sim'</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">surto</span><span class="op">$</span><span class="va">colica</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">surto</span><span class="op">$</span><span class="va">colica</span>, labels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Não'</span>,<span class="st">'Sim'</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">surto</span><span class="op">$</span><span class="va">vomito</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">surto</span><span class="op">$</span><span class="va">vomito</span>, labels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Não'</span>,<span class="st">'Sim'</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">surto</span><span class="op">$</span><span class="va">nausea</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">surto</span><span class="op">$</span><span class="va">nausea</span>, labels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Não'</span>,<span class="st">'Sim'</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">surto</span><span class="op">$</span><span class="va">cefaleia</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">surto</span><span class="op">$</span><span class="va">cefaleia</span>, labels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Não'</span>,<span class="st">'Sim'</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">surto</span><span class="op">$</span><span class="va">desidratacao</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">surto</span><span class="op">$</span><span class="va">desidratacao</span>, labels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Não'</span>,<span class="st">'Sim'</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">surto</span><span class="op">$</span><span class="va">febre</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">surto</span><span class="op">$</span><span class="va">febre</span>, labels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Não'</span>,<span class="st">'Sim'</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">surto</span><span class="op">$</span><span class="va">servsaude</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">surto</span><span class="op">$</span><span class="va">servsaude</span>, labels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Não'</span>,<span class="st">'Sim'</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">surto</span><span class="op">$</span><span class="va">gravidade</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">surto</span><span class="op">$</span><span class="va">gravidade</span>, </span>
+<span>                          order <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                          labels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Leve'</span>,<span class="st">'Moderado'</span>,<span class="st">"Grave"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">surto</span><span class="op">$</span><span class="va">salada</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">surto</span><span class="op">$</span><span class="va">salada</span>, labels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Não'</span>,<span class="st">'Sim'</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">surto</span><span class="op">$</span><span class="va">pao</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">surto</span><span class="op">$</span><span class="va">pao</span>, labels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Não'</span>,<span class="st">'Sim'</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">surto</span><span class="op">$</span><span class="va">medalhao</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">surto</span><span class="op">$</span><span class="va">medalhao</span>, labels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Não'</span>,<span class="st">'Sim'</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">surto</span><span class="op">$</span><span class="va">macarrao</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">surto</span><span class="op">$</span><span class="va">macarrao</span>, labels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Não'</span>,<span class="st">'Sim'</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">surto</span><span class="op">$</span><span class="va">molhoqueijo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">surto</span><span class="op">$</span><span class="va">molhoqueijo</span>, labels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Não'</span>,<span class="st">'Sim'</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">surto</span><span class="op">$</span><span class="va">molhoverm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">surto</span><span class="op">$</span><span class="va">molhoverm</span>, labels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Não'</span>,<span class="st">'Sim'</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">surto</span><span class="op">$</span><span class="va">pudim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">surto</span><span class="op">$</span><span class="va">pudim</span>, labels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Não'</span>,<span class="st">'Sim'</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">surto</span><span class="op">$</span><span class="va">frutas</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">surto</span><span class="op">$</span><span class="va">frutas</span>, labels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Não'</span>,<span class="st">'Sim'</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">surto</span><span class="op">$</span><span class="va">agua</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">surto</span><span class="op">$</span><span class="va">agua</span>, labels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Não'</span>,<span class="st">'Sim'</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">surto</span><span class="op">$</span><span class="va">suco</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">surto</span><span class="op">$</span><span class="va">suco</span>, labels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'Não'</span>,<span class="st">'Sim'</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section><section id="importando-.csv" class="level2" data-number="2.3"><h2 data-number="2.3" class="anchored" data-anchor-id="importando-.csv">
+<span class="header-section-number">2.3</span> Importando .csv</h2>
+<p>O pacote <code>utils</code> é utilizado automaticamente ao iniciar o R, assim podemos utilizar a função <code>read.csv</code> para ler arquivos .csv.</p>
+<p>A seguir utilizaremos o arquivo <a href="https://drive.google.com/file/d/1JDRdA2GGr_DV5kK2jVxzq9cgqkdSjjvF/view?usp=sharing">ToothGrowth.csv</a>, que contém dados de um experimento sobre o efeito de vitamina C no crescimento dos dentes de porquinhos-da-índia. Especificamente, o experimento examinou o comprimento dos dentes (medido em milímetros) em diferentes condições de suplementação de vitamina C. (Saiba mais usando a função <code>help</code> do R: <code><a href="https://rdrr.io/r/datasets/ToothGrowth.html">help(ToothGrowth)</a></code>)</p>
+<p><strong>Variáveis:</strong></p>
+<ul>
+<li><p><strong>len</strong>: O comprimento do dente (numérico).</p></li>
+<li>
+<p><strong>supp</strong>: O tipo de suplemento de vitamina C administrado (fator com dois níveis):</p>
+<ul>
+<li><p><code>VC</code>: Vitamina C fornecida diretamente (via solução de ácido ascórbico).</p></li>
+<li><p><code>OJ</code>: Suplemento fornecido na forma de suco de laranja.</p></li>
+</ul>
+</li>
+<li>
+<p><strong>dose</strong>: A dose de vitamina C administrada (numérica), em miligramas por dia (mg/dia), com três valores possíveis:</p>
+<ul>
+<li><p><code>0.5</code>: Dose baixa (0,5 mg).</p></li>
+<li><p><code>1.0</code>: Dose média (1,0 mg).</p></li>
+<li><p><code>2.0</code>: Dose alta (2,0 mg).</p></li>
+</ul>
+</li>
+</ul>
+<p>Este arquivo é composto por campos que são separados por vírgula.</p>
+<p><img src="./figures/base_csv_ToothGrowth.png" class="img-fluid"></p>
+<section id="funções" class="level3" data-number="2.3.1"><h3 data-number="2.3.1" class="anchored" data-anchor-id="funções">
+<span class="header-section-number">2.3.1</span> Funções</h3>
+<p><code>read.csv(file, header = TRUE, sep = “,”, quote = “"”, dec = “.”, fill = TRUE)</code></p>
+<p><code>read.csv2(file, header = TRUE, sep = “;”, quote = “"”, dec = “,”, fill = TRUE)</code></p>
+<p><strong>Atenção</strong><br>
+- file: nome do arquivo<br>
+- header: um valor lógico indicando quando o arquivo contém os nomes das variáveis na primeira linha<br>
+- sep: caractere de separação<br>
+- quote: conjunto de caracteres de citação<br>
+- dec: caractere usado em arquivos para pontos decimais<br>
+- fill: valor lógico que indica se as linhas possuem comprimentos diferentes (nesse caso, espaços em branco são implicitamente adicionados)</p>
+<div class="cell">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dados1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"./data/ToothGrowth.csv"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">dados1</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<thead><tr class="header">
+<th style="text-align: right;">len</th>
+<th style="text-align: left;">supp</th>
+<th style="text-align: right;">dose</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">4.2</td>
+<td style="text-align: left;">VC</td>
+<td style="text-align: right;">0.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">11.5</td>
+<td style="text-align: left;">VC</td>
+<td style="text-align: right;">0.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">7.3</td>
+<td style="text-align: left;">VC</td>
+<td style="text-align: right;">0.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5.8</td>
+<td style="text-align: left;">VC</td>
+<td style="text-align: right;">0.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">6.4</td>
+<td style="text-align: left;">VC</td>
+<td style="text-align: right;">0.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">10.0</td>
+<td style="text-align: left;">VC</td>
+<td style="text-align: right;">0.5</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">dados1</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   60 obs. of  3 variables:
+ $ len : num  4.2 11.5 7.3 5.8 6.4 10 11.2 11.2 5.2 7 ...
+ $ supp: chr  "VC" "VC" "VC" "VC" ...
+ $ dose: num  0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 ...</code></pre>
+</div>
+</div>
+<section id="utilizando-stringsasfactors" class="level4" data-number="2.3.1.1"><h4 data-number="2.3.1.1" class="anchored" data-anchor-id="utilizando-stringsasfactors">
+<span class="header-section-number">2.3.1.1</span> Utilizando stringsAsFactors</h4>
+<p>Utilizando o parâmentro stringAsFactors, podemos solicitar ao R que os campos de string sejam transformados em fatores. Caso contrário o arquivo será lido apenas como string.</p>
+<div class="cell">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dados2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"./data/ToothGrowth.csv"</span>,</span>
+<span>                   stringsAsFactors <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">dados2</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<thead><tr class="header">
+<th style="text-align: right;">len</th>
+<th style="text-align: left;">supp</th>
+<th style="text-align: right;">dose</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">4.2</td>
+<td style="text-align: left;">VC</td>
+<td style="text-align: right;">0.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">11.5</td>
+<td style="text-align: left;">VC</td>
+<td style="text-align: right;">0.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">7.3</td>
+<td style="text-align: left;">VC</td>
+<td style="text-align: right;">0.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5.8</td>
+<td style="text-align: left;">VC</td>
+<td style="text-align: right;">0.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">6.4</td>
+<td style="text-align: left;">VC</td>
+<td style="text-align: right;">0.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">10.0</td>
+<td style="text-align: left;">VC</td>
+<td style="text-align: right;">0.5</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">dados2</span><span class="op">)</span> <span class="co">#A função str(arq1) é utilizada para mostrar uma descrição do arquivo lido.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   60 obs. of  3 variables:
+ $ len : num  4.2 11.5 7.3 5.8 6.4 10 11.2 11.2 5.2 7 ...
+ $ supp: Factor w/ 2 levels "OJ","VC": 2 2 2 2 2 2 2 2 2 2 ...
+ $ dose: num  0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 ...</code></pre>
+</div>
+</div>
+
+
+<!-- -->
+
+</section></section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="./01_primeiros_passos.html" class="pagination-link" aria-label="Primeiros Passos">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Primeiros Passos</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./03_manipulando_dados_R.html" class="pagination-link" aria-label="Manipulando dados com o pacote Tidyverse">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Manipulando dados com o pacote Tidyverse</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb15" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Importando dados no R</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>O R permite a leitura de dados em diferentes formatos. Podemos digitá-los diretamente no R ou importá-los de vários tipos de arquivos/extensões. O formato mais adequado para seu banco de dados irá depender do seu tamanho.</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>Podemos ler aquivos em formato .txt, .xls, .csv, .dbs, de outros *softwares* estatísticos (SPSS, SAS, etc), entre outros.</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>Pacotes como <span class="in">`readr`</span>, <span class="in">`readxl`</span>, entre outros, serão úteis na leitura dos dados.</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>Entretanto, vale ressaltar que, para que possamos importar os dados no R para posterior análise, precisamos ter anteriormente definido o problema e os objetivos, coletado os dados (variáveis de interesse) e construído um banco de dados.</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>A seguir, introduziremos um problema fictício sobre intoxicação alimentar, que será utilizado no decorrer deste material.</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="fu">## Problema: Surto de intoxicação alimentar estafilocócica durante evento científico</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>Em novembro de 2018, um surto de intoxicação alimentar por enterotoxina estafilocócica ocorreu após pessoas almoçarem em um simpósio, promovido por uma universidade privada, no município de Verde Oliva.</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>A alimentação servida foi preparada na cozinha de uma empresa terceirizada e enviada ao local do evento por meio de vans sem refrigeração. O cardápio foi composto por: salada de folhas verdes, tomate, cenoura e pepino, pão francês, medalhão ao molho madeira, macarrão espaguete sem molho, molho de queijo, molho ao sugo, pudim de leite condensado, salada de frutas, suco de laranja e água.</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>O almoço ocorreu por volta das 13:00h. Os primeiros casos do surto começaram a apresentar sintomas típicos de intoxicação alimentar, como náusea, vômito, cólica abdominal e diarreia, uma hora após a ingestão dos alimentos.</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>No total, 200 pessoas participaram do simpósio. Das 150 pessoas que almoçaram no local do evento, 50 adoeceram. Foram considerados casos do surto as pessoas que apresentaram vômito e/ou diarreia após terem se alimentado com pelo menos um dos itens servidos no evento.</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>Com a investigação do surto alimentar pretende-se identificar quais alimentos possivelmente provocaram a intoxicação no evento científico.</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>Foram coletadas as seguintes variáveis:</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>id: número de identificação;\</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>caso: não caso(0) e caso(1);\</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>sexo: feminino(0) e masculino(1);\</span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>dtnasc: data de nascimento (dd/mm/aaaa);\</span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>ocupa: ocupação referida no momento da inscrição;\</span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>dtisint: data de início dos sintomas (dd/mm/aaaa);\</span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>horaisint: os sintomas tiveram início após quantas horas depois de comer? (em horas);</span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>diarreia: teve diarreia? não(0); sim(1);\</span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>colica: teve cólica intestinal? não(0); sim(1);\</span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>vomito: teve vômito? não(0); sim(1);\</span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>nausea: teve náusea? não(0); sim(1);\</span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>cefaleia: teve dor de cabeça/cefaléia? não(0); sim(1);\</span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>desidratacao: teve desidratação? não(0); sim(1);\</span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>febre: teve febre (temp<span class="sc">\&gt;</span>37,5C°)? não(0); sim(1);\</span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>servsaude: procurou algum serviço de saúde? não(0); sim(1);\</span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>gravidade: gravidade do caso - leve(1), moderado(2) ou grave(3)\</span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>salada: comeu salada de folhas verdes, tomate, cenoura e pepino? não(0); sim(1);\</span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>pao: comeu mini-pão francês? não(0); sim(1);\</span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>medalhao: comeu medalhão ao molho madeira? não(0); sim(1);\</span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>macarrao: comeu macarrão cozido? não(0); sim(1);\</span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>molhoqueijo: comeu molho de queijo? não(0); sim(1);\</span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>molhoverm: comeu molho ao sugo? não(0); sim(1);\</span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>pudim: comeu pudim de leite condensado? não(0); sim(1);</span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>frutas: comeu salada de frutas? não(0); sim(1);\</span>
+<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>agua: bebeu água? não(0); sim(1);\</span>
+<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>suco: bebeu suco de laranja? não(0); sim(1);\</span>
+<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>hb: valor de hemoglobina (valor de referência 12 – 16 g/dL);\</span>
+<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>leuco: valor de leucócitos (valor de referência 4.500 – 11.000 /uL);\</span>
+<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>tgl: valor de triglicérides (valor de referência <span class="sc">\&lt;</span>175 mg/dL sem jejum)</span>
+<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a>Alguns dados sobre os comensais estão disponíveis no banco de dados <span class="co">[</span><span class="ot">surto</span><span class="co">](https://docs.google.com/spreadsheets/d/1Xelz4_hMWR6wwfYBsMtIgvcbU5qk0_VJ/edit?usp=sharing&amp;ouid=107277038879352988537&amp;rtpof=true&amp;sd=true)</span>.</span>
+<span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a>Faça o *download* do arquivo <span class="co">[</span><span class="ot">surto</span><span class="co">](https://docs.google.com/spreadsheets/d/1Xelz4_hMWR6wwfYBsMtIgvcbU5qk0_VJ/edit?usp=sharing&amp;ouid=107277038879352988537&amp;rtpof=true&amp;sd=true)</span> e salve na pasta criada do seu projeto R.</span>
+<span id="cb15-60"><a href="#cb15-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a><span class="fu">## Importando .xlsx</span></span>
+<span id="cb15-62"><a href="#cb15-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-63"><a href="#cb15-63" aria-hidden="true" tabindex="-1"></a>O pacote <span class="in">`readxl`</span> é utilizado para ler arquivos excel em R. Assim podemos utilizar a função <span class="in">`read_excel`</span> para ler tais arquivos. (Ver: <span class="ot">&lt;https://cran.r-project.org/web/packages/readxl/readxl.pdf&gt;</span> e <span class="ot">&lt;https://www.rdocumentation.org/packages/readxl/versions/0.1.1/topics/read_excel)&gt;</span></span>
+<span id="cb15-64"><a href="#cb15-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-65"><a href="#cb15-65" aria-hidden="true" tabindex="-1"></a>A seguir utilizaremos o arquivo <span class="co">[</span><span class="ot">surto</span><span class="co">](https://docs.google.com/spreadsheets/d/1Xelz4_hMWR6wwfYBsMtIgvcbU5qk0_VJ/edit?usp=sharing&amp;ouid=107277038879352988537&amp;rtpof=true&amp;sd=true)</span>, que contém dados sobre um surto de intoxicação alimentar estafilocócica durante evento científico (dados fictícios).</span>
+<span id="cb15-66"><a href="#cb15-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-67"><a href="#cb15-67" aria-hidden="true" tabindex="-1"></a>&lt;/center&gt;</span>
+<span id="cb15-68"><a href="#cb15-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-69"><a href="#cb15-69" aria-hidden="true" tabindex="-1"></a>!<span class="co">[</span><span class="ot">Exemplo do arquivo de dados no formato do Excel, [surto](https://docs.google.com/spreadsheets/d/1Xelz4_hMWR6wwfYBsMtIgvcbU5qk0_VJ/edit?usp=sharing&amp;ouid=107277038879352988537&amp;rtpof=true&amp;sd=true)</span><span class="co">](https://uploaddeimagens.com.br/images/002/966/052/original/dados_excel.png?1605622385)</span>{#id .class width="80%" height="80%"}</span>
+<span id="cb15-70"><a href="#cb15-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-71"><a href="#cb15-71" aria-hidden="true" tabindex="-1"></a>&lt;/center&gt;</span>
+<span id="cb15-72"><a href="#cb15-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-73"><a href="#cb15-73" aria-hidden="true" tabindex="-1"></a>Primeiro instale o pacote <span class="in">`readxl`</span> usando o comando <span class="in">`install.packages("readxl")`</span>.</span>
+<span id="cb15-74"><a href="#cb15-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-77"><a href="#cb15-77" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-78"><a href="#cb15-78" aria-hidden="true" tabindex="-1"></a><span class="co">#Carregue o pacote usando a função library(nome_pacote)</span></span>
+<span id="cb15-79"><a href="#cb15-79" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl) </span>
+<span id="cb15-80"><a href="#cb15-80" aria-hidden="true" tabindex="-1"></a><span class="co">#Utilize a função read_excel para ler o banco de dados surto</span></span>
+<span id="cb15-81"><a href="#cb15-81" aria-hidden="true" tabindex="-1"></a>surto <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"./data/surto.xlsx"</span>) </span>
+<span id="cb15-82"><a href="#cb15-82" aria-hidden="true" tabindex="-1"></a><span class="co">#Para visualizar o banco de dados utilize a função View(nome_dados)</span></span>
+<span id="cb15-83"><a href="#cb15-83" aria-hidden="true" tabindex="-1"></a><span class="co">#View(surto) </span></span>
+<span id="cb15-84"><a href="#cb15-84" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-85"><a href="#cb15-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-86"><a href="#cb15-86" aria-hidden="true" tabindex="-1"></a>Após a importação do arquivo de dados, precisamos verificar se as variáveis foram importadas corretamente, ou seja, quais os tipos/formatos. Para isso, podemos utilizar a função *str*.</span>
+<span id="cb15-87"><a href="#cb15-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-90"><a href="#cb15-90" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-91"><a href="#cb15-91" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(surto) <span class="co">#A função str(arq1) é utilizada para mostrar uma descrição do arquivo lido.</span></span>
+<span id="cb15-92"><a href="#cb15-92" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-93"><a href="#cb15-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-94"><a href="#cb15-94" aria-hidden="true" tabindex="-1"></a>Observe que todas as variáveis estão no formato numérico (num), exceto as variáveis dtnasc (formato data, POSIXct), ocupa (formato texto, chr) e dtisint (formato data). Entretanto, o formato numérico não é adequado para algumas variáveis.</span>
+<span id="cb15-95"><a href="#cb15-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-96"><a href="#cb15-96" aria-hidden="true" tabindex="-1"></a>As variáveis qualitativas ou categóricas são tratadas como fatores (factor) no R e as variáveis quantitativas ou numéricas são do formato numérico (num).</span>
+<span id="cb15-97"><a href="#cb15-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-98"><a href="#cb15-98" aria-hidden="true" tabindex="-1"></a>A seguir, vamos classificar as variáveis de interesse do banco de dados de intoxicação alimentar (<span class="co">[</span><span class="ot">surto</span><span class="co">](https://docs.google.com/spreadsheets/d/1Xelz4_hMWR6wwfYBsMtIgvcbU5qk0_VJ/edit?usp=sharing&amp;ouid=107277038879352988537&amp;rtpof=true&amp;sd=true)</span>).</span>
+<span id="cb15-99"><a href="#cb15-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-100"><a href="#cb15-100" aria-hidden="true" tabindex="-1"></a><span class="in">```{r echo=FALSE}</span></span>
+<span id="cb15-101"><a href="#cb15-101" aria-hidden="true" tabindex="-1"></a><span class="in">variavel &lt;- names(surto)</span></span>
+<span id="cb15-102"><a href="#cb15-102" aria-hidden="true" tabindex="-1"></a><span class="in">tipo &lt;- c("Numérica Ordinal", "Categórica Nominal", "Categórica Nominal", "Data", "Categórica Nominal", "Data", "Numérica", rep("Categórica Nominal",8), "Categórica Ordinal", rep("Categórica Nominal",10), rep("Numérica Contínua",3))</span></span>
+<span id="cb15-103"><a href="#cb15-103" aria-hidden="true" tabindex="-1"></a><span class="in">formato &lt;- c("num", "factor", "factor", "date", "factor", "date", "num", rep("factor",19), rep("num",3) )</span></span>
+<span id="cb15-104"><a href="#cb15-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-105"><a href="#cb15-105" aria-hidden="true" tabindex="-1"></a><span class="in">tab &lt;- data.frame(variavel,tipo,formato)</span></span>
+<span id="cb15-106"><a href="#cb15-106" aria-hidden="true" tabindex="-1"></a><span class="in">names(tab) &lt;- c("Variável", "Tipo", "Formato")</span></span>
+<span id="cb15-107"><a href="#cb15-107" aria-hidden="true" tabindex="-1"></a><span class="in">knitr::kable(tab)</span></span>
+<span id="cb15-108"><a href="#cb15-108" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-109"><a href="#cb15-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-110"><a href="#cb15-110" aria-hidden="true" tabindex="-1"></a>Agora que já sabemos o tipo das variáveis de interesse, precisamos transformar as variáveis qualitativas/categóricas em "factor". Para isso, usaremos a função <span class="in">`factor`</span>; o argumento *label* da função, permite nomear as categorias das variáveis.</span>
+<span id="cb15-111"><a href="#cb15-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-114"><a href="#cb15-114" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-115"><a href="#cb15-115" aria-hidden="true" tabindex="-1"></a><span class="co">#transformando em factor</span></span>
+<span id="cb15-116"><a href="#cb15-116" aria-hidden="true" tabindex="-1"></a>surto<span class="sc">$</span>caso <span class="ot">&lt;-</span> <span class="fu">factor</span>(surto<span class="sc">$</span>caso)</span>
+<span id="cb15-117"><a href="#cb15-117" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(surto<span class="sc">$</span>caso) <span class="co">#níveis do fator</span></span>
+<span id="cb15-118"><a href="#cb15-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-119"><a href="#cb15-119" aria-hidden="true" tabindex="-1"></a><span class="co">#classificando os níveis do fator</span></span>
+<span id="cb15-120"><a href="#cb15-120" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(surto<span class="sc">$</span>caso) <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="st">"Não"</span><span class="ot">=</span><span class="st">"0"</span>,</span>
+<span id="cb15-121"><a href="#cb15-121" aria-hidden="true" tabindex="-1"></a>                           <span class="st">"Sim"</span><span class="ot">=</span><span class="st">"1"</span>)</span>
+<span id="cb15-122"><a href="#cb15-122" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(surto<span class="sc">$</span>caso)</span>
+<span id="cb15-123"><a href="#cb15-123" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-124"><a href="#cb15-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-127"><a href="#cb15-127" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-128"><a href="#cb15-128" aria-hidden="true" tabindex="-1"></a><span class="co">#transformando as demais variáveis em fatores</span></span>
+<span id="cb15-129"><a href="#cb15-129" aria-hidden="true" tabindex="-1"></a>surto<span class="sc">$</span>sexo <span class="ot">&lt;-</span> <span class="fu">factor</span>(surto<span class="sc">$</span>sexo, <span class="at">labels=</span><span class="fu">c</span>(<span class="st">"Feminino"</span>,<span class="st">"Masculino"</span>))</span>
+<span id="cb15-130"><a href="#cb15-130" aria-hidden="true" tabindex="-1"></a>surto<span class="sc">$</span>ocupa <span class="ot">&lt;-</span> <span class="fu">factor</span>(surto<span class="sc">$</span>ocupa)</span>
+<span id="cb15-131"><a href="#cb15-131" aria-hidden="true" tabindex="-1"></a>surto<span class="sc">$</span>diarreia <span class="ot">&lt;-</span> <span class="fu">factor</span>(surto<span class="sc">$</span>diarreia, <span class="at">labels=</span><span class="fu">c</span>(<span class="st">'Não'</span>,<span class="st">'Sim'</span>))</span>
+<span id="cb15-132"><a href="#cb15-132" aria-hidden="true" tabindex="-1"></a>surto<span class="sc">$</span>colica <span class="ot">&lt;-</span> <span class="fu">factor</span>(surto<span class="sc">$</span>colica, <span class="at">labels=</span><span class="fu">c</span>(<span class="st">'Não'</span>,<span class="st">'Sim'</span>))</span>
+<span id="cb15-133"><a href="#cb15-133" aria-hidden="true" tabindex="-1"></a>surto<span class="sc">$</span>vomito <span class="ot">&lt;-</span> <span class="fu">factor</span>(surto<span class="sc">$</span>vomito, <span class="at">labels=</span><span class="fu">c</span>(<span class="st">'Não'</span>,<span class="st">'Sim'</span>))</span>
+<span id="cb15-134"><a href="#cb15-134" aria-hidden="true" tabindex="-1"></a>surto<span class="sc">$</span>nausea <span class="ot">&lt;-</span> <span class="fu">factor</span>(surto<span class="sc">$</span>nausea, <span class="at">labels=</span><span class="fu">c</span>(<span class="st">'Não'</span>,<span class="st">'Sim'</span>))</span>
+<span id="cb15-135"><a href="#cb15-135" aria-hidden="true" tabindex="-1"></a>surto<span class="sc">$</span>cefaleia <span class="ot">&lt;-</span> <span class="fu">factor</span>(surto<span class="sc">$</span>cefaleia, <span class="at">labels=</span><span class="fu">c</span>(<span class="st">'Não'</span>,<span class="st">'Sim'</span>))</span>
+<span id="cb15-136"><a href="#cb15-136" aria-hidden="true" tabindex="-1"></a>surto<span class="sc">$</span>desidratacao <span class="ot">&lt;-</span> <span class="fu">factor</span>(surto<span class="sc">$</span>desidratacao, <span class="at">labels=</span><span class="fu">c</span>(<span class="st">'Não'</span>,<span class="st">'Sim'</span>))</span>
+<span id="cb15-137"><a href="#cb15-137" aria-hidden="true" tabindex="-1"></a>surto<span class="sc">$</span>febre <span class="ot">&lt;-</span> <span class="fu">factor</span>(surto<span class="sc">$</span>febre, <span class="at">labels=</span><span class="fu">c</span>(<span class="st">'Não'</span>,<span class="st">'Sim'</span>))</span>
+<span id="cb15-138"><a href="#cb15-138" aria-hidden="true" tabindex="-1"></a>surto<span class="sc">$</span>servsaude <span class="ot">&lt;-</span> <span class="fu">factor</span>(surto<span class="sc">$</span>servsaude, <span class="at">labels=</span><span class="fu">c</span>(<span class="st">'Não'</span>,<span class="st">'Sim'</span>))</span>
+<span id="cb15-139"><a href="#cb15-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-140"><a href="#cb15-140" aria-hidden="true" tabindex="-1"></a>surto<span class="sc">$</span>gravidade <span class="ot">&lt;-</span> <span class="fu">factor</span>(surto<span class="sc">$</span>gravidade, </span>
+<span id="cb15-141"><a href="#cb15-141" aria-hidden="true" tabindex="-1"></a>                          <span class="at">order =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb15-142"><a href="#cb15-142" aria-hidden="true" tabindex="-1"></a>                          <span class="at">labels=</span><span class="fu">c</span>(<span class="st">'Leve'</span>,<span class="st">'Moderado'</span>,<span class="st">"Grave"</span>))</span>
+<span id="cb15-143"><a href="#cb15-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-144"><a href="#cb15-144" aria-hidden="true" tabindex="-1"></a>surto<span class="sc">$</span>salada <span class="ot">&lt;-</span> <span class="fu">factor</span>(surto<span class="sc">$</span>salada, <span class="at">labels=</span><span class="fu">c</span>(<span class="st">'Não'</span>,<span class="st">'Sim'</span>))</span>
+<span id="cb15-145"><a href="#cb15-145" aria-hidden="true" tabindex="-1"></a>surto<span class="sc">$</span>pao <span class="ot">&lt;-</span> <span class="fu">factor</span>(surto<span class="sc">$</span>pao, <span class="at">labels=</span><span class="fu">c</span>(<span class="st">'Não'</span>,<span class="st">'Sim'</span>))</span>
+<span id="cb15-146"><a href="#cb15-146" aria-hidden="true" tabindex="-1"></a>surto<span class="sc">$</span>medalhao <span class="ot">&lt;-</span> <span class="fu">factor</span>(surto<span class="sc">$</span>medalhao, <span class="at">labels=</span><span class="fu">c</span>(<span class="st">'Não'</span>,<span class="st">'Sim'</span>))</span>
+<span id="cb15-147"><a href="#cb15-147" aria-hidden="true" tabindex="-1"></a>surto<span class="sc">$</span>macarrao <span class="ot">&lt;-</span> <span class="fu">factor</span>(surto<span class="sc">$</span>macarrao, <span class="at">labels=</span><span class="fu">c</span>(<span class="st">'Não'</span>,<span class="st">'Sim'</span>))</span>
+<span id="cb15-148"><a href="#cb15-148" aria-hidden="true" tabindex="-1"></a>surto<span class="sc">$</span>molhoqueijo <span class="ot">&lt;-</span> <span class="fu">factor</span>(surto<span class="sc">$</span>molhoqueijo, <span class="at">labels=</span><span class="fu">c</span>(<span class="st">'Não'</span>,<span class="st">'Sim'</span>))</span>
+<span id="cb15-149"><a href="#cb15-149" aria-hidden="true" tabindex="-1"></a>surto<span class="sc">$</span>molhoverm <span class="ot">&lt;-</span> <span class="fu">factor</span>(surto<span class="sc">$</span>molhoverm, <span class="at">labels=</span><span class="fu">c</span>(<span class="st">'Não'</span>,<span class="st">'Sim'</span>))</span>
+<span id="cb15-150"><a href="#cb15-150" aria-hidden="true" tabindex="-1"></a>surto<span class="sc">$</span>pudim <span class="ot">&lt;-</span> <span class="fu">factor</span>(surto<span class="sc">$</span>pudim, <span class="at">labels=</span><span class="fu">c</span>(<span class="st">'Não'</span>,<span class="st">'Sim'</span>))</span>
+<span id="cb15-151"><a href="#cb15-151" aria-hidden="true" tabindex="-1"></a>surto<span class="sc">$</span>frutas <span class="ot">&lt;-</span> <span class="fu">factor</span>(surto<span class="sc">$</span>frutas, <span class="at">labels=</span><span class="fu">c</span>(<span class="st">'Não'</span>,<span class="st">'Sim'</span>))</span>
+<span id="cb15-152"><a href="#cb15-152" aria-hidden="true" tabindex="-1"></a>surto<span class="sc">$</span>agua <span class="ot">&lt;-</span> <span class="fu">factor</span>(surto<span class="sc">$</span>agua, <span class="at">labels=</span><span class="fu">c</span>(<span class="st">'Não'</span>,<span class="st">'Sim'</span>))</span>
+<span id="cb15-153"><a href="#cb15-153" aria-hidden="true" tabindex="-1"></a>surto<span class="sc">$</span>suco <span class="ot">&lt;-</span> <span class="fu">factor</span>(surto<span class="sc">$</span>suco, <span class="at">labels=</span><span class="fu">c</span>(<span class="st">'Não'</span>,<span class="st">'Sim'</span>))</span>
+<span id="cb15-154"><a href="#cb15-154" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-155"><a href="#cb15-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-156"><a href="#cb15-156" aria-hidden="true" tabindex="-1"></a><span class="fu">## Importando .csv</span></span>
+<span id="cb15-157"><a href="#cb15-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-158"><a href="#cb15-158" aria-hidden="true" tabindex="-1"></a>O pacote <span class="in">`utils`</span> é utilizado automaticamente ao iniciar o R, assim podemos utilizar a função <span class="in">`read.csv`</span> para ler arquivos .csv.</span>
+<span id="cb15-159"><a href="#cb15-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-160"><a href="#cb15-160" aria-hidden="true" tabindex="-1"></a>A seguir utilizaremos o arquivo <span class="co">[</span><span class="ot">ToothGrowth.csv</span><span class="co">](https://drive.google.com/file/d/1JDRdA2GGr_DV5kK2jVxzq9cgqkdSjjvF/view?usp=sharing)</span>, que contém dados de um experimento sobre o efeito de vitamina C no crescimento dos dentes de porquinhos-da-índia. Especificamente, o experimento examinou o comprimento dos dentes (medido em milímetros) em diferentes condições de suplementação de vitamina C. (Saiba mais usando a função <span class="in">`help`</span> do R: <span class="in">`help(ToothGrowth)`</span>)</span>
+<span id="cb15-161"><a href="#cb15-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-162"><a href="#cb15-162" aria-hidden="true" tabindex="-1"></a>**Variáveis:**</span>
+<span id="cb15-163"><a href="#cb15-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-164"><a href="#cb15-164" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**len**: O comprimento do dente (numérico).</span>
+<span id="cb15-165"><a href="#cb15-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-166"><a href="#cb15-166" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**supp**: O tipo de suplemento de vitamina C administrado (fator com dois níveis):</span>
+<span id="cb15-167"><a href="#cb15-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-168"><a href="#cb15-168" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span><span class="in">`VC`</span>: Vitamina C fornecida diretamente (via solução de ácido ascórbico).</span>
+<span id="cb15-169"><a href="#cb15-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-170"><a href="#cb15-170" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span><span class="in">`OJ`</span>: Suplemento fornecido na forma de suco de laranja.</span>
+<span id="cb15-171"><a href="#cb15-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-172"><a href="#cb15-172" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**dose**: A dose de vitamina C administrada (numérica), em miligramas por dia (mg/dia), com três valores possíveis:</span>
+<span id="cb15-173"><a href="#cb15-173" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-174"><a href="#cb15-174" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span><span class="in">`0.5`</span>: Dose baixa (0,5 mg).</span>
+<span id="cb15-175"><a href="#cb15-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-176"><a href="#cb15-176" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span><span class="in">`1.0`</span>: Dose média (1,0 mg).</span>
+<span id="cb15-177"><a href="#cb15-177" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-178"><a href="#cb15-178" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span><span class="in">`2.0`</span>: Dose alta (2,0 mg).</span>
+<span id="cb15-179"><a href="#cb15-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-180"><a href="#cb15-180" aria-hidden="true" tabindex="-1"></a>Este arquivo é composto por campos que são separados por vírgula.</span>
+<span id="cb15-181"><a href="#cb15-181" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-182"><a href="#cb15-182" aria-hidden="true" tabindex="-1"></a><span class="al">![](./figures/base_csv_ToothGrowth.png)</span></span>
+<span id="cb15-183"><a href="#cb15-183" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-184"><a href="#cb15-184" aria-hidden="true" tabindex="-1"></a><span class="fu">### Funções</span></span>
+<span id="cb15-185"><a href="#cb15-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-186"><a href="#cb15-186" aria-hidden="true" tabindex="-1"></a><span class="in">`read.csv(file, header = TRUE, sep = “,”, quote = “"”, dec = “.”, fill = TRUE)`</span></span>
+<span id="cb15-187"><a href="#cb15-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-188"><a href="#cb15-188" aria-hidden="true" tabindex="-1"></a><span class="in">`read.csv2(file, header = TRUE, sep = “;”, quote = “"”, dec = “,”, fill = TRUE)`</span></span>
+<span id="cb15-189"><a href="#cb15-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-190"><a href="#cb15-190" aria-hidden="true" tabindex="-1"></a>**Atenção**\</span>
+<span id="cb15-191"><a href="#cb15-191" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>file: nome do arquivo\</span>
+<span id="cb15-192"><a href="#cb15-192" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>header: um valor lógico indicando quando o arquivo contém os nomes das variáveis na primeira linha\</span>
+<span id="cb15-193"><a href="#cb15-193" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>sep: caractere de separação\</span>
+<span id="cb15-194"><a href="#cb15-194" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>quote: conjunto de caracteres de citação\</span>
+<span id="cb15-195"><a href="#cb15-195" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>dec: caractere usado em arquivos para pontos decimais\</span>
+<span id="cb15-196"><a href="#cb15-196" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>fill: valor lógico que indica se as linhas possuem comprimentos diferentes (nesse caso, espaços em branco são implicitamente adicionados)</span>
+<span id="cb15-197"><a href="#cb15-197" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-200"><a href="#cb15-200" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-201"><a href="#cb15-201" aria-hidden="true" tabindex="-1"></a>dados1 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"./data/ToothGrowth.csv"</span>)</span>
+<span id="cb15-202"><a href="#cb15-202" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dados1)</span>
+<span id="cb15-203"><a href="#cb15-203" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dados1)</span>
+<span id="cb15-204"><a href="#cb15-204" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-205"><a href="#cb15-205" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-206"><a href="#cb15-206" aria-hidden="true" tabindex="-1"></a><span class="fu">#### Utilizando stringsAsFactors</span></span>
+<span id="cb15-207"><a href="#cb15-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-208"><a href="#cb15-208" aria-hidden="true" tabindex="-1"></a>Utilizando o parâmentro stringAsFactors, podemos solicitar ao R que os campos de string sejam transformados em fatores. Caso contrário o arquivo será lido apenas como string.</span>
+<span id="cb15-209"><a href="#cb15-209" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-212"><a href="#cb15-212" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-213"><a href="#cb15-213" aria-hidden="true" tabindex="-1"></a>dados2 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"./data/ToothGrowth.csv"</span>,</span>
+<span id="cb15-214"><a href="#cb15-214" aria-hidden="true" tabindex="-1"></a>                   <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-215"><a href="#cb15-215" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dados2)</span>
+<span id="cb15-216"><a href="#cb15-216" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dados2) <span class="co">#A função str(arq1) é utilizada para mostrar uma descrição do arquivo lido.</span></span>
+<span id="cb15-217"><a href="#cb15-217" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+</code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+<footer class="footer"><div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Adapted by Lucas Toshio Ito.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+</body></html>
